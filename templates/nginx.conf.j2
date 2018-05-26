@@ -1,83 +1,84 @@
-# This file will be compiled into /etc/nginx/nginx.conf
-
-user  nginx;
-worker_processes  <%= ENV['WORKER_PROCESSES'] || 1 %>;
-
-pid        /var/run/nginx.pid;
+user www-data;
+worker_processes 1;
+pid /run/nginx.pid;
 
 events {
-    worker_connections  <%= ENV['WORKER_CONNECTIONS'] || 1024 %>;
+	worker_connections 768;
+	# multi_accept on;
 }
 
 http {
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
 
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-                      '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+	##
+	# Basic Settings
+	##
 
-    access_log <%= ENV['ACCESS_LOG'] || "off" %>;
+	sendfile on;
+	tcp_nopush on;
+	tcp_nodelay on;
+	keepalive_timeout 65;
+	types_hash_max_size 2048;
+	# server_tokens off;
 
-    <% if ENV['WEBSOCKET'] && ENV['WEBSOCKET'].downcase == 'true' %>
-    map $http_upgrade $connection_upgrade {
-        default upgrade;
-        ''      close;
-    }
-    <% end %>
+	# server_names_hash_bucket_size 64;
+	# server_name_in_redirect off;
 
-    access_log  /var/log/nginx/access.log  main;
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
 
-    sendfile        on;
+	##
+	# SSL Settings
+	##
 
-    keepalive_timeout  <%= ENV['KEEPALIVE_TIMEOUT'] || 65 %>;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+	ssl_prefer_server_ciphers on;
 
-    gzip  <%= ENV['GZIP'] || 'on' %>;
-    {% if gzip == 'on' %}
-    include /var/www/vhosts/gzip.conf;
-    {% endif %}
+	##
+	# Logging Settings
+	##
 
-    server_tokens <%= ENV['SERVER_TOKENS'] || 'off' %>;
+	access_log /var/log/nginx/access.log;
+	error_log /var/log/nginx/error.log;
 
-    server_names_hash_max_size <%= ENV['SERVER_NAMES_HASH_MAX_SIZE'] || 512 %>;
+	##
+	# Gzip Settings
+	##
 
-    <% if ENV['SERVER_NAMES_HASH_BUCKET_SIZE'] %>
-    server_names_hash_bucket_size <%= ENV['SERVER_NAMES_HASH_BUCKET_SIZE'] %>;
-    <% end %>
+	gzip on;
+	gzip_disable "msie6";
 
-    <% if ENV['CLIENT_MAX_BODY_SIZE'] %>
-    client_max_body_size <%= ENV['CLIENT_MAX_BODY_SIZE'] %>;
-    <% end %>
+	gzip_vary on;
+	gzip_proxied any;
+	gzip_comp_level 6;
+	gzip_buffers 16 8k;
+	gzip_http_version 1.1;
+	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
-    <% if ENV['PROXY_BUFFERS'] %>
-    proxy_buffers <%= ENV['PROXY_BUFFERS'] %>;
-    <% end %>
+	##
+	# Virtual Host Configs
+	##
 
-    <% if ENV['PROXY_BUFFER_SIZE'] %>
-    proxy_buffer_size <%= ENV['PROXY_BUFFER_SIZE'] %>;
-    <% end %>
-
-    <% if ENV['RESOLVER'] %>
-    resolver <%= ENV['RESOLVER'] %>;
-    <% end %>
-
-    <% if ENV['PROXY_CONNECT_TIMEOUT'] %>
-    proxy_connect_timeout <%= ENV['PROXY_CONNECT_TIMEOUT'] %>;
-    <% end %>
-
-    <% if ENV['PROXY_SEND_TIMEOUT'] %>
-    proxy_send_timeout <%= ENV['PROXY_SEND_TIMEOUT'] %>;
-    <% end %>
-
-    <% if ENV['PROXY_READ_TIMEOUT'] %>
-    proxy_read_timeout <%= ENV['PROXY_READ_TIMEOUT'] %>;
-    <% end %>
-
-    include /etc/nginx/conf.d/*.conf;
-
-    server {
-        listen      80 default_server;
-        server_name _;
-        return      444;
-    }
+	include /etc/nginx/conf.d/*.conf;
 }
+
+
+#mail {
+#	# See sample authentication script at:
+#	# http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript
+# 
+#	# auth_http localhost/auth.php;
+#	# pop3_capabilities "TOP" "USER";
+#	# imap_capabilities "IMAP4rev1" "UIDPLUS";
+# 
+#	server {
+#		listen     localhost:110;
+#		protocol   pop3;
+#		proxy      on;
+#	}
+# 
+#	server {
+#		listen     localhost:143;
+#		protocol   imap;
+#		proxy      on;
+#	}
+#}

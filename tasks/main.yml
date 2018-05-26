@@ -9,7 +9,8 @@
     mode: 0755
   with_items:
   - wordpress
-  - wp-db-data
+  - wpdb
+  - traefik/ssl
   - nginx
   - nginx-conf
   - logs/nginx
@@ -38,25 +39,17 @@
     mode: 0644
 
 - name: Deploy nginx.conf as Nginx configuration
-  copy:
-    src: nginx.conf.j2
-    dest: "{{ compose_project_dir }}/nginx-conf/nginx.conf.erb"
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: 0644
-
-- name: Deploy gzip.conf as Nginx virtual host
-  copy:
-    src: "{{ role_path }}/files/gzip.conf"
-    dest: "{{ compose_project_dir }}/nginx/gzip.conf"
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: 0644
-
-- name: Deploy WordPress Nginx virtual host
   template:
-    src: wordpress-nginx.j2
-    dest: "{{ compose_project_dir }}/nginx/wordpress.conf"
+    src: nginx.conf.j2
+    dest: "{{ compose_project_dir }}/nginx/nginx.conf"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: 0644
+
+- name: Deploy traefik configuration
+  template:
+    src: traefik.toml.j2
+    dest: "{{ compose_project_dir }}/traefik/traefik.toml"
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
     mode: 0644
@@ -70,18 +63,11 @@
     mode: 0644
   with_items:
   - domain.conf.j2
-  - domain.conf.ssl.j2
-
-- name: Adjust Let's Encrypt Nginx HTTP conf naming scheme
-  copy:
-    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.j2"
-    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.conf.erb"
-    remote_src: "yes"
 
 - name: Adjust Let's Encrypt Nginx HTTPS conf naming scheme
   copy:
-    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.ssl.j2"
-    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.ssl.conf.erb"
+    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.j2"
+    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.conf"
     remote_src: "yes"
 
 - name: Clean-up abundant Let's Encrypt Nginx config templates
@@ -90,7 +76,6 @@
     state: absent
   with_items:
   - domain.conf.j2
-  - domain.conf.ssl.j2
 
 - name: Run docker-compose up
   command: docker-compose -f docker-compose.yml up -d
