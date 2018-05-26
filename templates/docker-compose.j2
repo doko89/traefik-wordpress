@@ -15,10 +15,12 @@ services:
       - '443:443'
     environment:
       CLIENT_MAX_BODY_SIZE: '100M'
-      GZIP: 'on'
+      GZIP: '{{ gzip }}'
       DOMAINS: '{{ domain }}'
       STAGE: '{{ stage }}'
+     {% if STAGE == 'production' %}
       FORCE_RENEW: '{{ renew }}'
+     {% endif %}
     links:
       - wordpress
     restart: always

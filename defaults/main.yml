@@ -1,13 +1,17 @@
 ---
 # defaults file for wordpress-docker
 system_user: ubuntu
-domain: relaxsejenak.com
+domain: dev.relaxsejenak.com
 compose_project_dir: /home/{{ system_user }}/{{ domain }}
-stage: production
-renew: true
 wp_version: 4.9.6
 php_fmp_version: php7.1-fpm
 wp_db_name: wordpress
 wp_db_tb_pre: wp_
 wp_db_host: mysql
 wp_db_psw: R8l04nInTuI
+
+## nginx configuration
+gzip: on
+stage: local
+renew: false
+
