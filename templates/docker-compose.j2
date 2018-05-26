@@ -25,8 +25,6 @@ services:
 
   wordpress:
     image: wordpress:{{ wp_version }}-{{ php_fmp_version }}
-    ports:
-      - '9000:9000'
     volumes:
       - ./wordpress:/var/www/html
       - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
@@ -41,8 +39,6 @@ services:
 
   db:
     image: mariadb
-    ports:
-      - '3306:3306'
     volumes:
       - ./wp-db-data:/var/lib/mysql
     environment:
