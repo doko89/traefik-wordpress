@@ -17,7 +17,8 @@ services:
       CLIENT_MAX_BODY_SIZE: '100M'
       GZIP: 'on'
       DOMAINS: '{{ domain }}'
-      PRODUCTION: '{{ stage }}'
+      STAGE: '{{ stage }}'
+      FORCE_RENEW: '{{ renew }}'
     links:
       - wordpress
     restart: always

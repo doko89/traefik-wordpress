@@ -4,6 +4,7 @@ system_user: ubuntu
 domain: relaxsejenak.com
 compose_project_dir: /home/{{ system_user }}/{{ domain }}
 stage: production
+renew: true
 wp_version: 4.9.6
 php_fmp_version: php7.1-fpm
 wp_db_name: wordpress
