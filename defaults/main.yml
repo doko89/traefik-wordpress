@@ -2,9 +2,9 @@
 # defaults file for wordpress-docker
 system_user: ubuntu
 compose_project_dir: /home/{{ system_user }}/compose-wordpress
-domain: foolcontrol.org
-stage: false
-wp_version: 4.9.4
+domain: relaxsejenak.com
+stage: production
+wp_version: 4.9.6
 php_fmp_version: php7.1-fpm
 wp_db_name: wordpress
 wp_db_tb_pre: wp_
