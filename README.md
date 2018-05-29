@@ -14,12 +14,7 @@ Requirements
 
 For this role to work, it is required to have have Docker and Docker Compose installed and setup. If you haven't done this already (manually)
 
-Role Variables
---------------
 
-## acme
-email: user@gmail.com
-```
 ### example vars.yml
 --------------------
 
