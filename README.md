@@ -1,7 +1,8 @@
 Ansible Role: Traefik WordPress
 =========
 
-This Ansible playbook will Deploy & run Docker Compose project for WordPress instance. It will also configure Let's Encrypt certificates for specified domain. It consists of 3 separate containers running:
+This Ansible playbook will Deploy & run Docker Compose project for WordPress instance. It will also configure Let's Encrypt certificates for 
+specified domain. It consists of 4 separate containers running:
 * WordPress (PHP7 FPM)
 * Nginx 
 * Traefik (enabled with Let's Encrpt HTTPS encryption)
