@@ -12,7 +12,7 @@ This role was created as part of [Traefik Wordpress](https://github.com/doko89/t
 Requirements
 ------------
 
-For this role to work, it is required to have have Docker and Docker Compose installed and setup. If you haven't done this already (manually), then you're required to install following role: [AdnanHodzic.docker-compose](https://galaxy.ansible.com/AdnanHodzic/docker-compose).
+For this role to work, it is required to have have Docker and Docker Compose installed and setup. If you haven't done this already (manually)
 
 Role Variables
 --------------
