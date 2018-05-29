@@ -1,12 +1,13 @@
-Ansible Role: Containerized WordPress
+Ansible Role: Traefik WordPress
 =========
 
 This Ansible playbook will Deploy & run Docker Compose project for WordPress instance. It will also configure Let's Encrypt certificates for specified domain. It consists of 3 separate containers running:
 * WordPress (PHP7 FPM)
-* Nginx (enabled with Let's Encrpt HTTPS encryption)
+* Nginx 
+* Traefik (enabled with Let's Encrpt HTTPS encryption)
 * MariaDB
 
-This role was created as part of [containerized-wordpress-project](https://github.com/AdnanHodzic/containerized-wordpress-project)
+This role was created as part of [Traefik Wordpress](https://github.com/doko89/traefik-wordpress)
 
 Requirements
 ------------
@@ -16,44 +17,44 @@ For this role to work, it is required to have have Docker and Docker Compose ins
 Role Variables
 --------------
 
-This role comes with following variables defined in defaults/main.yml:
+## acme
+email: user@gmail.com
+```
+### example vars.yml
+--------------------
 
 ```
+---
+# defaults file for wordpress-docker
 system_user: ubuntu
-compose_project_dir: /home/{{ system_user }}/compose-wordpress
-domain: foolcontrol.org
-stage: false
-wp_version: 4.9.4
-php_fmp_version: php7.1-fpm
+project: domain
+stage: local #local or production
+domain: domain.com      
+compose_project_dir: /home/{{ system_user }}/{{ domain }}
+
+## wordpress
+wp_version: 4.9.6
+php_fmp_version: fpm-alpine
 wp_db_name: wordpress
 wp_db_tb_pre: wp_
 wp_db_host: mysql
-wp_db_psw: change-M3
+wp_db_psw: mysqlpassword
+
+## acme
+email: user@mail.com
 ```
 
-If role is run without changing these, WordPress instance with Nginx virtual host as well as Database settings will be setup with these values. 
-
-`stage` is an important value and its detailed explanation can be found on: [Let's Encrypt certificates (HTTPS encryption)](https://github.com/AdnanHodzic/containerized-wordpress-project/blob/master/README.md#5-lets-encrypt-certificates-https-encryption)
-
-Blog post discussion: 
-* [Automated way of getting Let’s Encrypt certificates for WordPress using Docker + Ansible](http://foolcontrol.org/?p=2758)
-* [Automagically deploy & run containerized WordPress (PHP7 FPM, Nginx, MariaDB) using Ansible + Docker on AWS](http://foolcontrol.org/?p=2002)
-
-
-Dependencies
-------------
-
-**ToDo:**
-Determine if "AdnanHodzic.docker-compose-setup" role should be set as role dependency. If yes, update this section of ReadMe + meta code.
 
 Example Playbook
 ----------------
 
 ```
-- hosts: servers
-  remote_user: "{{ system_user }}"
+- hosts: all
+  vars_files:
+  - ./vars.yml
   roles:
-    - { role: AdnanHodzic.containerized-wordpress }}  
+  - traefik-wordpress
+
 ```
 
 License
