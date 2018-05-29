@@ -24,15 +24,12 @@ email: user@gmail.com
 --------------------
 
 ```
----
-# defaults file for wordpress-docker
 system_user: ubuntu
 project: domain
 stage: local #local or production
 domain: domain.com      
 compose_project_dir: /home/{{ system_user }}/{{ domain }}
 
-## wordpress
 wp_version: 4.9.6
 php_fmp_version: fpm-alpine
 wp_db_name: wordpress
@@ -40,7 +37,6 @@ wp_db_tb_pre: wp_
 wp_db_host: mysql
 wp_db_psw: mysqlpassword
 
-## acme
 email: user@mail.com
 ```
 
