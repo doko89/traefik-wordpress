@@ -12,6 +12,9 @@ server {
         try_files $uri $uri/ /index.php?$args;
     }
 
+    rewrite ^/sitemap_index\.xml$ /index.php?sitemap=1 last;
+    rewrite ^/([^/]+?)-sitemap([0-9]+)?\.xml$ /index.php?sitemap=$1&sitemap_n=$2 last;
+
     location ~* \.(?:ico|css|js|gif|jpe?g|png)$ {
 	expires 30d;
 	add_header Pragma public;
